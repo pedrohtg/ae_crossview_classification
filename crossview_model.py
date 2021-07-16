@@ -202,6 +202,7 @@ class CrossViewModel(nn.Module):
 # Normal Distribution
 class ELBOLoss(nn.Module):
     def __init__(self, rec_loss, alpha = 1):
+        super(ELBOLoss, self).__init__()
         self.rec_loss = rec_loss
         self.alpha = alpha
 
