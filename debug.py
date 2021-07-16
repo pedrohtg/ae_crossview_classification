@@ -125,13 +125,13 @@ def main():
     print("Testing Model output ")
     inp = torch.randn(1, 3, 224, 224).to(device)
     if is_vae:
-        rec, clf, *aux_outputs = model(inputs)
+        rec, clf, *aux_outputs = model(inp, inp)
         rec_loss = criterion[0](rec, inputs, *aux_outputs)
         clf_loss = criterion[1](clf, labels)
         loss = alpha_1*rec_loss + alpha_2*clf_loss
     else:
         # Get model outputs and calculate loss
-        rec, clf = model(inputs)
+        rec, clf = model(inp, inp)
         rec_loss = criterion[0](rec, inputs)
         clf_loss = criterion[1](clf, labels)
         loss = alpha_1*rec_loss + alpha_2*clf_loss
