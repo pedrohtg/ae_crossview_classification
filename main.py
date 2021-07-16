@@ -44,7 +44,7 @@ def main():
                         help='Number of epochs')
     parser.add_argument('--early_stop', type=int, required=True,
                         help='Number of epochs to activate early stop.')
-                        
+
     parser.add_argument('--backbone', type=str, required=False, default='vgg',
                         help = 'Choose backbone network. [vgg|resnet|densenet]')
     parser.add_argument('--latent_dim', type=int, required=False, default=512,
@@ -81,7 +81,7 @@ def main():
     optim_type = args.optim
     lr = args.lr
     momentum = args.momentum
-    wd = args.weight_decay
+    wd = args.wd
 
     if (net_type == 'vae'):
         is_vae = True
