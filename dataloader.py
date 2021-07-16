@@ -9,6 +9,17 @@ class MultiImageFolder(datasets.ImageFolder):
         self.aerial_ds = aerial_ds
         self.ground_ds = ground_ds
 
+        a_imgs = self.aerial_ds.imgs
+        g_imgs = self.ground_ds.imgs
+
+        if len(a_imgs) > len(g_imgs):
+            a_imgs = [(p, t) for p, t in a_imgs if (p.replace('aerial', 'ground'), t) in g_imgs]
+        if len(g_imgs) > len(a_imgs):
+            g_imgs = [(p, t) for p, t in g_imgs if (p.replace('ground', 'aerial'), t) in a_imgs]
+        
+        self.aerial_ds.imgs = a_imgs
+        self.ground_ds.imgs = g_imgs
+
     def __len__(self):
         return len(self.aerial_ds.imgs)
 
