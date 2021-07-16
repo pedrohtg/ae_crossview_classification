@@ -143,10 +143,12 @@ def main():
 
     print("-"*30)
     print("Testing Dataloader format ")
-    inputs, labels = next(dataloaders_dict['train'])
+    for inputs, labels in dataloaders_dict['train']:
 
-    print(inputs)
-    print(labels)
+        print(inputs)
+        print(labels)
+
+        break
 
     # tensor_board = SummaryWriter(log_dir = out_dir)
     # final_model, val_history = trainval.train(model, dataloaders_dict, criterion, optimizer,
