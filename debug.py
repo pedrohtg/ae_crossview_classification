@@ -79,7 +79,7 @@ def main():
     optim_type = args.optim
     lr = args.lr
     momentum = args.momentum
-    wd = args.weight_decay
+    wd = args.wd
 
     if (net_type == 'vae'):
         is_vae = True
@@ -150,3 +150,6 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+#python debug.py --dataset airound --aerial_dataset_path /home/users/gabriel/Mestrado/datasets/airound_folds2/aerial_fold1/ --ground_dataset_path /home/users/gabriel/Mestrado/datasets/airound_folds2/ground_fold1/ --output_path ../tp_out --batch 10 --epochs 15 --backbone vgg --latent_dim 256 --network_type vae --early_stop 5
