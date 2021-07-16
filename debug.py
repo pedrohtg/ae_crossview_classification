@@ -149,7 +149,7 @@ def main():
         print('%'*30)
         print(len(data_a))
         inp_a, lab_a = data_a[0], data_a[1]
-        print(inp_a, lab_a)
+        print(inp_a, "&&&&&&&&&&&&&&&", lab_a)
         print('%'*30)
         print(len(data_g))
         print(data_g)

@@ -59,9 +59,12 @@ def train(model, dataloaders, criterion, optimizer, num_epochs, epochs_early_sto
             running_corrects = 0.0
 
             # Iterate over data.
-            for inputs, labels in tqdm(dataloaders[phase]):
-                inputs = inputs[0].to(device)
-                labels = labels[1].to(device)
+            for data_a, data_g in tqdm(dataloaders[phase]):
+                inp_a = data_a[0][0].to(device)
+                inp_g = data_g[0][0].to(device)
+                labels = data_a[0][1].to(device)
+                # inputs = inputs[0].to(device)
+                # labels = labels[1].to(device)
 
                 # zero the parameter gradients
                 optimizer.zero_grad()
@@ -73,14 +76,14 @@ def train(model, dataloaders, criterion, optimizer, num_epochs, epochs_early_sto
                         time1 = time.time()
 
                     if is_vae and phase == 'train':
-                        rec, clf, *aux_outputs = model(inputs)
-                        rec_loss = criterion[0](rec, inputs, *aux_outputs)
+                        rec_a, rec_g, clf, *aux_outputs = model(inp_a, inp_g)
+                        rec_loss = criterion[0]((rec_a, rec_g), (inp_a, inp_g), *aux_outputs)
                         clf_loss = criterion[1](clf, labels)
                         loss = alpha_1*rec_loss + alpha_2*clf_loss
                     else:
                         # Get model outputs and calculate loss
-                        rec, clf = model(inputs)
-                        rec_loss = criterion[0](rec, inputs)
+                        rec_a, rec_g, clf = model(inp_a, inp_g)
+                        rec_loss = criterion[0]((rec_a, rec_g), (inp_a, inp_g))
                         clf_loss = criterion[1](clf, labels)
                         loss = alpha_1*rec_loss + alpha_2*clf_loss
                     
@@ -97,7 +100,7 @@ def train(model, dataloaders, criterion, optimizer, num_epochs, epochs_early_sto
                     predictions.append(p)
                 for l in labels.data.cpu().numpy(): 
                     labels_list.append(l)
-                running_loss += loss.item() * inputs.size(0)
+                running_loss += loss.item() * inp_a.size(0)
                 running_corrects += torch.sum(preds == labels.data)
 
             epoch_loss = running_loss / len(dataloaders[phase].dataset)
@@ -138,7 +141,7 @@ def train(model, dataloaders, criterion, optimizer, num_epochs, epochs_early_sto
     model.load_state_dict(best_model_wts)
     return model, val_acc_history
 
-def final_eval(model, dataloaders, csv_file, stats_file, is_inception):
+def final_eval(model, dataloaders, csv_file, stats_file, is_vae):
 
     def softmax(A):
         e = np.exp(A)
@@ -152,21 +155,31 @@ def final_eval(model, dataloaders, csv_file, stats_file, is_inception):
     softmax_values = []
     image_names = []
 
-    for inputs, labels in dataloaders['val']:
+    for data_a, data_g in dataloaders['val']:
         # Saving name of images
-        for names in labels[0]: 
+        
+        for names in data_a[1][0]: 
             image_names.append(names)
-        inputs = inputs[0].to(device)
-        labels = labels[1].to(device)
-        outputs = model(inputs)
-        _, preds = torch.max(outputs, 1)
+        
+        inp_a = data_a[0][0].to(device)
+        inp_g = data_g[0][0].to(device)
+        labels = data_a[0][1].to(device)
+        
+        if is_vae:
+            rec_a, rec_g, clf, *_ = model(inp_a, inp_g)
+        else:
+            rec_a, rec_g, clf = model(inp_a, inp_g)
+        
+        _, preds = torch.max(clf, 1)
+
         for p in preds.data.cpu().numpy(): 
             predictions.append(p)
         for l in labels.data.cpu().numpy(): 
             labels_list.append(l)
         for s in range(len(preds)):
-            for o in softmax(outputs.data.cpu().numpy()[s]):
+            for o in softmax(clf.data.cpu().numpy()[s]):
                 softmax_values.append(o)
+
     for i in range(len(predictions)):
         csv_file.write(str(image_names[i]) + ';' + str(labels_list[i]) + ';' + str(predictions[i]) + ';' + str(softmax_values[i]) + '\n')
     calculate_metrics(predictions, labels_list, stats_file)
