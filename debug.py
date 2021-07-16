@@ -143,7 +143,7 @@ def main():
 
     print("-"*30)
     print("Testing Dataloader format ")
-    inputs, labels = dataloaders_dict['train'][0]
+    inputs, labels = next(dataloaders_dict['train'])
 
     print(inputs)
     print(labels)
