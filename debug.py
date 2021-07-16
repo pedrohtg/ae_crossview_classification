@@ -124,6 +124,7 @@ def main():
     print("-"*30)
     print("Testing Model output ")
     inp = torch.randn(1, 3, 224, 224).to(device)
+    labels = torch.ones(1, dtype=torch.long)
     if is_vae:
         rec_a, rec_g, clf, *aux_outputs = model(inp, inp)
         rec_loss = criterion[0]((rec_a, rec_g), (inp, inp), *aux_outputs)
