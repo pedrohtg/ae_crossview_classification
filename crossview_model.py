@@ -166,7 +166,8 @@ class CrossViewModel(nn.Module):
             for param in self.backbone_g.extractor.parameters():
                 param.requires_grad = False
 
-        self.decoder = Decoder(inplanes, 2*feature_dim)
+        self.decoder_a = Decoder(inplanes, 2*feature_dim)
+        self.decoder_g = Decoder(inplanes, 2*feature_dim)
         self.classifier = Classifier(2*feature_dim, num_classes)
 
     def reparameterize(self, mu, logvar):
@@ -191,13 +192,14 @@ class CrossViewModel(nn.Module):
         
         joined_feats = torch.cat((feat_a, feat_g), 1)
 
-        rec = self.decoder(joined_feats)
+        rec_a = self.decoder_a(joined_feats)
+        rec_g = self.decoder_g(joined_feats)
         c = self.classifier(joined_feats)
 
         if self.is_vae:
-            return rec, c, mu_a, sigma_a, mu_g, sigma_g
+            return rec_a, rec_g, c, mu_a, sigma_a, mu_g, sigma_g
 
-        return rec, c
+        return rec_a, rec_g, c
 
 # Normal Distribution
 class ELBOLoss(nn.Module):
@@ -209,6 +211,6 @@ class ELBOLoss(nn.Module):
     def forward(self, pred, target, mu_a, sigma_a, mu_g, sigma_g):
         kl_loss_a =  (-0.5*(1+sigma_a - mu_a**2- torch.exp(sigma_a)).sum(dim = 1)).mean(dim =0)
         kl_loss_g =  (-0.5*(1+sigma_g - mu_g**2- torch.exp(sigma_g)).sum(dim = 1)).mean(dim =0)
-        rec_loss = self.rec_loss(pred, target)
+        rec_loss = self.rec_loss(pred[0], target[0]) + self.rec_loss(pred[1], target[1])
 
         return rec_loss*self.alpha + kl_loss_a + kl_loss_g

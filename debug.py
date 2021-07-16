@@ -125,24 +125,24 @@ def main():
     print("Testing Model output ")
     inp = torch.randn(1, 3, 224, 224).to(device)
     if is_vae:
-        rec, clf, *aux_outputs = model(inp, inp)
-        rec_loss = criterion[0](rec, inputs, *aux_outputs)
+        rec_a, rec_g, clf, *aux_outputs = model(inp, inp)
+        rec_loss = criterion[0]((rec_a, rec_g), (inp, inp), *aux_outputs)
         clf_loss = criterion[1](clf, labels)
-        loss = alpha_1*rec_loss + alpha_2*clf_loss
+        loss = 1*rec_loss + 1*clf_loss
     else:
         # Get model outputs and calculate loss
-        rec, clf = model(inp, inp)
-        rec_loss = criterion[0](rec, inputs)
+        rec_a, rec_g, clf = model(inp, inp)
+        rec_loss = criterion[0]((rec_a, rec_g), (inp, inp))
         clf_loss = criterion[1](clf, labels)
-        loss = alpha_1*rec_loss + alpha_2*clf_loss
+        loss = 1*rec_loss + 1*clf_loss
 
-    print(rec.shape, clf.shape)
+    print(rec_a.shape, rec_g.shape, clf.shape)
     print(loss)
     loss.backward()
 
     print("-"*30)
     print("Testing Dataloader format ")
-    inputs, labels = dataloaders['train'][0]
+    inputs, labels = dataloaders_dict['train'][0]
 
     print(inputs)
     print(labels)
