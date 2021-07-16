@@ -13,12 +13,12 @@ class MultiImageFolder(datasets.ImageFolder):
         return len(self.aerial_ds)
 
     def __getitem__(self, index):
-        print('MM', index)
+        # print('MM', index)
         return self.aerial_ds[index], self.ground_ds[index]
 
 class MyImageFolder(datasets.ImageFolder):
     def __getitem__(self, index):
-        print('IF', index)
+        # print('IF', index)
         return super(MyImageFolder, self).__getitem__(index), self.imgs[index]
 
 def create_dataloader(aerial_data_dir, ground_data_dir, input_size, batch_size, mean_a, std_a, mean_g, std_g):
@@ -56,7 +56,7 @@ def create_dataloader(aerial_data_dir, ground_data_dir, input_size, batch_size, 
                                           MyImageFolder(os.path.join(ground_data_dir, x), data_transforms_g[x])
                                          ) for x in ['train', 'val']}
     dataloaders_dict = {x: torch.utils.data.DataLoader(image_datasets[x],
-                        batch_size=batch_size, shuffle=True, num_workers=0, drop_last=True) 
+                        batch_size=batch_size, shuffle=True, num_workers=0, drop_last=False) 
                         for x in ['train', 'val']}
     return dataloaders_dict
 
