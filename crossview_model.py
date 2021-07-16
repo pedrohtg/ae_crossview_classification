@@ -136,7 +136,7 @@ class Classifier(nn.Module):
         return self.block(x)
 
 class CrossViewModel(nn.Module):
-    def __init__(self, backbone='vgg', inplanes=3, feature_dim=512, num_classes=11, is_vae=False):
+    def __init__(self, backbone='vgg', inplanes=3, feature_dim=512, num_classes=11, is_vae=False, is_finetune=False):
         super(CrossViewModel, self).__init__()
 
         self.inplanes = inplanes
@@ -154,11 +154,17 @@ class CrossViewModel(nn.Module):
             self.backbone_a = _resnet(feature_dim, is_vae)
             self.backbone_g = _resnet(feature_dim, is_vae)
         elif backbone == 'densenet':
-            self.backbone_a = _densenet(feature_dim, is_vae)
+            self.backbone_a = _densenet(feature_dim, is_vae).extractor
             self.backbone_g = _densenet(feature_dim, is_vae)
         else:
             self.backbone_a = None
             self.backbone_g = None
+
+        if is_finetune:
+            for param in self.backbone_a.extractor.parameters():
+                param.requires_grad = False
+            for param in self.backbone_g.extractor.parameters():
+                param.requires_grad = False
 
         self.decoder = Decoder(inplanes, 2*feature_dim)
         self.classifier = Classifier(2*feature_dim, num_classes)

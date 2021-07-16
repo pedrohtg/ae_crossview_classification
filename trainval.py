@@ -32,7 +32,7 @@ def calculate_metrics(preds, labels, file = None):
 
 def train(model, dataloaders, criterion, optimizer, num_epochs, epochs_early_stop, 
           tensor_board, is_vae,
-          alpha_1=1, alpha_2=2):
+          alpha_1=1, alpha_2=1):
     counter_early_stop_epochs = 0
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     since = time.time()
