@@ -13,10 +13,12 @@ class MultiImageFolder(datasets.ImageFolder):
         return len(self.aerial_ds)
 
     def __getitem__(self, index):
+        print('MM', index)
         return self.aerial_ds[index], self.ground_ds[index]
 
 class MyImageFolder(datasets.ImageFolder):
     def __getitem__(self, index):
+        print('IF', index)
         return super(MyImageFolder, self).__getitem__(index), self.imgs[index]
 
 def create_dataloader(aerial_data_dir, ground_data_dir, input_size, batch_size, mean_a, std_a, mean_g, std_g):
