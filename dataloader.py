@@ -10,7 +10,7 @@ class MultiImageFolder(datasets.ImageFolder):
         self.ground_ds = ground_ds
 
     def __len__(self):
-        return len(self.aerial_ds)
+        return len(self.aerial_ds.imgs)
 
     def __getitem__(self, index):
         # print('MM', index)
