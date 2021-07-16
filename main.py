@@ -42,14 +42,16 @@ def main():
                         help='Batch Size')
     parser.add_argument('--epochs', type=int, required=True,
                         help='Number of epochs')
+    parser.add_argument('--early_stop', type=int, required=True,
+                        help='Number of epochs to activate early stop.')
+                        
     parser.add_argument('--backbone', type=str, required=False, default='vgg',
                         help = 'Choose backbone network. [vgg|resnet|densenet]')
     parser.add_argument('--latent_dim', type=int, required=False, default=512,
                         help = 'Latent space dimensions')
     parser.add_argument('--network_type', type=str, required=False, default='ae',
                         help = 'Choose network type. [ae|vae]')
-    parser.add_argument('--early_stop', type=int, required=True,
-                        help='Number of epochs to activate early stop.')
+
     parser.add_argument('--feature_extract', type= bool, required=False, default=False,
                         help='Train just the classifier.')
     

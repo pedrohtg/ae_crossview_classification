@@ -111,7 +111,7 @@ def main():
     print("-"*30)
     print("Testing Model output ")
     inp = torch.randn(1, 3, 224, 224)
-    rec, clf = model(inp)
+    rec, clf = model(inp, inp)
     print(rec.shape, clf.shape)
 
     print("-"*30)
