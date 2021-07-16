@@ -154,7 +154,7 @@ class CrossViewModel(nn.Module):
             self.backbone_a = _resnet(feature_dim, is_vae)
             self.backbone_g = _resnet(feature_dim, is_vae)
         elif backbone == 'densenet':
-            self.backbone_a = _densenet(feature_dim, is_vae).extractor
+            self.backbone_a = _densenet(feature_dim, is_vae)
             self.backbone_g = _densenet(feature_dim, is_vae)
         else:
             self.backbone_a = None
