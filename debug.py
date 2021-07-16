@@ -148,8 +148,10 @@ def main():
         print(data_a)
         print('%'*30)
         print(len(data_a))
-        inp_a, lab_a, img_a_paths = data_a[0], data_a[1], data_a[2]
-        print(inp_a, lab_a, img_a_paths)
+        inp_a, lab_a = data_a[0], data_a[1]
+        print(inp_a, lab_a)
+        print('%'*30)
+        print(len(data_g))
         print(data_g)
 
         break
