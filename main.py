@@ -128,12 +128,12 @@ def main():
                                              epochs, early_stop, tensor_board, is_vae)
     print (out_dir)
     if feature_extract:
-        torch.save(final_model, os.path.join(out_dir, net_type + '_final_model_ft'))
-        final_stats_file = open (os.path.join(out_dir, net_type + '_finalstats_ft.txt'), 'w')
+        torch.save(final_model, os.path.join(out_dir, backbone + '_' + net_type + '_final_model_ft'))
+        final_stats_file = open (os.path.join(out_dir, backbone + '_' +net_type + '_finalstats_ft.txt'), 'w')
     else:
-        torch.save(final_model, os.path.join(out_dir, net_type + '_final_model'))
-        final_stats_file = open (os.path.join(out_dir, net_type + '_finalstats.txt'), 'w')
-    csv_file = open(os.path.join(out_dir, net_type + '_results.csv'), 'w')
+        torch.save(final_model, os.path.join(out_dir, backbone + '_' +net_type + '_final_model'))
+        final_stats_file = open (os.path.join(out_dir, backbone + '_' +net_type + '_finalstats.txt'), 'w')
+    csv_file = open(os.path.join(out_dir, backbone + '_' +net_type + '_results.csv'), 'w')
 
     trainval.final_eval(final_model, dataloaders_dict, csv_file, final_stats_file, is_vae)
 
