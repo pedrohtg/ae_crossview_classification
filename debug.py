@@ -108,10 +108,23 @@ def main():
     print("Params to learn:")
     print (params_to_update)
 
+    if optim_type == 'sgd':
+        optimizer = optim.SGD(params_to_update, lr=lr, momentum=0.9, weight_decay=wd)
+    elif optim_type == 'adam':
+        optimizer = optim.Adam(params_to_update, lr=lr, betas=(momentum, 0.99), weight_decay=wd)
+    else:
+        print("Optimizer Not Implemented.")
+        exit()
+
+    if is_vae:
+        criterion = (ELBOLoss(nn.MSELoss()),nn.CrossEntropyLoss())
+    else:
+        criterion = (nn.MSELoss(), nn.CrossEntropyLoss())
+
     print("-"*30)
     print("Testing Model output ")
     inp = torch.randn(1, 3, 224, 224).to(device)
-    if is_vae and phase == 'train':
+    if is_vae:
         rec, clf, *aux_outputs = model(inputs)
         rec_loss = criterion[0](rec, inputs, *aux_outputs)
         clf_loss = criterion[1](clf, labels)
@@ -133,19 +146,6 @@ def main():
 
     print(inputs)
     print(labels)
-
-    # if optim_type == 'sgd':
-    #     optimizer = optim.SGD(params_to_update, lr=lr, momentum=0.9, weight_decay=wd)
-    # elif optim_type == 'adam':
-    #     optimizer = optim.Adam(params_to_update, lr=lr, betas=(momentum, 0.99), weight_decay=wd)
-    # else:
-    #     print("Optimizer Not Implemented.")
-    #     exit()
-
-    # if is_vae:
-    #     criterion = (ELBOLoss(nn.MSELoss()),nn.CrossEntropyLoss())
-    # else:
-    #     criterion = (nn.MSELoss(), nn.CrossEntropyLoss())
 
     # tensor_board = SummaryWriter(log_dir = out_dir)
     # final_model, val_history = trainval.train(model, dataloaders_dict, criterion, optimizer,
