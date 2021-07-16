@@ -111,8 +111,21 @@ def main():
     print("-"*30)
     print("Testing Model output ")
     inp = torch.randn(1, 3, 224, 224).to(device)
-    rec, clf = model(inp, inp)
+    if is_vae and phase == 'train':
+        rec, clf, *aux_outputs = model(inputs)
+        rec_loss = criterion[0](rec, inputs, *aux_outputs)
+        clf_loss = criterion[1](clf, labels)
+        loss = alpha_1*rec_loss + alpha_2*clf_loss
+    else:
+        # Get model outputs and calculate loss
+        rec, clf = model(inputs)
+        rec_loss = criterion[0](rec, inputs)
+        clf_loss = criterion[1](clf, labels)
+        loss = alpha_1*rec_loss + alpha_2*clf_loss
+
     print(rec.shape, clf.shape)
+    print(loss)
+    loss.backward()
 
     print("-"*30)
     print("Testing Dataloader format ")
