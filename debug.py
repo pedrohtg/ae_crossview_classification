@@ -143,10 +143,12 @@ def main():
 
     print("-"*30)
     print("Testing Dataloader format ")
-    for inputs, labels in dataloaders_dict['train']:
+    for inputs_a, labels_a, inputs_g, labels_g in dataloaders_dict['train']:
 
-        print(inputs)
-        print(labels)
+        print(inputs_a)
+        print(inputs_g)
+        print(labels_a)
+        print(labels_g)
 
         break
 
