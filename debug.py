@@ -133,7 +133,7 @@ def main():
     else:
         # Get model outputs and calculate loss
         rec_a, rec_g, clf = model(inp, inp)
-        rec_loss = criterion[0]((rec_a, rec_g), (inp, inp))
+        rec_loss = criterion[0](rec_a, inp) +  criterion[0](rec_g, inp)
         clf_loss = criterion[1](clf, labels)
         loss = 1*rec_loss + 1*clf_loss
 

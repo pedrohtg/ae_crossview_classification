@@ -83,7 +83,7 @@ def train(model, dataloaders, criterion, optimizer, num_epochs, epochs_early_sto
                     else:
                         # Get model outputs and calculate loss
                         rec_a, rec_g, clf = model(inp_a, inp_g)
-                        rec_loss = criterion[0]((rec_a, rec_g), (inp_a, inp_g))
+                        rec_loss = criterion[0](rec_a, inp_a) +  criterion[0](rec_g, inp_g)
                         clf_loss = criterion[1](clf, labels)
                         loss = alpha_1*rec_loss + alpha_2*clf_loss
                     
