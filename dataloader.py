@@ -54,7 +54,7 @@ def create_dataloader(aerial_data_dir, ground_data_dir, input_size, batch_size, 
                                           MyImageFolder(os.path.join(ground_data_dir, x), data_transforms_g[x])
                                          ) for x in ['train', 'val']}
     dataloaders_dict = {x: torch.utils.data.DataLoader(image_datasets[x],
-                        batch_size=batch_size, shuffle=True, num_workers=8, drop_last=True) 
+                        batch_size=batch_size, shuffle=True, num_workers=0, drop_last=True) 
                         for x in ['train', 'val']}
     return dataloaders_dict
 
