@@ -75,7 +75,7 @@ def train(model, dataloaders, criterion, optimizer, num_epochs, epochs_early_sto
                     if (phase == 'train'):
                         time1 = time.time()
 
-                    if is_vae and phase == 'train':
+                    if is_vae:
                         rec_a, rec_g, clf, *aux_outputs = model(inp_a, inp_g)
                         rec_loss = criterion[0]((rec_a, rec_g), (inp_a, inp_g), *aux_outputs)
                         clf_loss = criterion[1](clf, labels)
