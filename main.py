@@ -64,6 +64,10 @@ def main():
     parser.add_argument('--wd', type=float, required=False, default=5e-5,
                         help='Weight Decay.')
 
+    parser.add_argument('--rec-loss-wt', type=float, required=False, default=1,
+                        help='Reconstruction Loss Weight.')
+    parser.add_argument('--clf-loss-wt', type=float, required=False, default=1,
+                        help='Classification Loss Weight.')
 
     args = parser.parse_args()
     dataset = args.dataset
@@ -82,6 +86,8 @@ def main():
     lr = args.lr
     momentum = args.momentum
     wd = args.wd
+    alpha1 = args.rec_loss_wt
+    alpha2 = args.clf_loss_wt
 
     if (net_type == 'vae'):
         is_vae = True
@@ -125,7 +131,7 @@ def main():
 
     tensor_board = SummaryWriter(log_dir = out_dir)
     final_model, val_history = trainval.train(model, dataloaders_dict, criterion, optimizer,
-                                             epochs, early_stop, tensor_board, is_vae)
+                                             epochs, early_stop, tensor_board, is_vae, alpha_1=alpha1, alpha_2=alpha2)
     print (out_dir)
     if feature_extract:
         torch.save(final_model, os.path.join(out_dir, backbone + '_' + net_type + '_final_model_ft'))
