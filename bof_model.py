@@ -117,7 +117,7 @@ class BoFModel(nn.Module):
             if len(kp_a) < 1:
                 des = np.zeros((1, self.sift.descriptorSize()), np.float32)
 
-            histo_a = torch.zeros(self.feature_dim, device=self.classifier.device)
+            histo_a = torch.zeros(self.feature_dim, device=a.device)
             nkp_a = len(kp_a)
 
             for d in des_a:
@@ -133,7 +133,7 @@ class BoFModel(nn.Module):
             if len(kp_g) < 1:
                 des = np.zeros((1, self.sift.descriptorSize()), np.float32)
 
-            histo_g = torch.zeros(self.feature_dim, device=self.classifier.device)
+            histo_g = torch.zeros(self.feature_dim, device=g.device)
             nkp_g = len(kp_g)
 
             for d in des_g:
