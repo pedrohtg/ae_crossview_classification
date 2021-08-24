@@ -118,7 +118,7 @@ class BoFModel(nn.Module):
                 des_a = np.zeros((1, self.sift.descriptorSize()), np.float32)
 
             histo_a = torch.zeros(self.feature_dim, device=a.device)
-            nkp_a = len(kp_a)
+            nkp_a = len(des_a)
 
             for d in des_a:
                 idx = self.visual_words_a.predict([d])
@@ -134,7 +134,7 @@ class BoFModel(nn.Module):
                 des_g = np.zeros((1, self.sift.descriptorSize()), np.float32)
 
             histo_g = torch.zeros(self.feature_dim, device=g.device)
-            nkp_g = len(kp_g)
+            nkp_g = len(des_g)
 
             for d in des_g:
                 idx = self.visual_words_g.predict([d])
