@@ -60,7 +60,7 @@ class BoFModel(nn.Module):
             inp_a = torch.movedim(inp_a, 1, 3)
             inp_g = torch.movedim(inp_g, 1, 3)
 
-            for i in range(inp_a.size): 
+            for i in range(inp_a.size()[0]): 
                 features = []
                 for img in inp_a[i]:
                     img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
@@ -70,7 +70,7 @@ class BoFModel(nn.Module):
                     features.append(des)
                 sift_vectors_a[i] = features
 
-            for i in range(inp_g.size):
+            for i in range(inp_g.size()[0]):
                 features = []
                 for img in inp_g[i]:
                     img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
