@@ -63,7 +63,7 @@ class BoFModel(nn.Module):
             for i in range(inp_a.size()[0]): 
                 features = []
                 for img in inp_a[i]:
-                    img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+                    img = cv2.cvtColor(img.numpy(), cv2.COLOR_RGB2GRAY)
                     kp, des = self.sift.detectAndCompute(img, None)
             
                     descriptor_list_a.extend(des)
@@ -73,7 +73,7 @@ class BoFModel(nn.Module):
             for i in range(inp_g.size()[0]):
                 features = []
                 for img in inp_g[i]:
-                    img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+                    img = cv2.cvtColor(img.numpy(), cv2.COLOR_RGB2GRAY)
                     kp, des = self.sift.detectAndCompute(img, None)
             
                     descriptor_list_g.extend(des)
@@ -94,7 +94,7 @@ class BoFModel(nn.Module):
             img_a = _a[i]
             img_g = _g[i]
 
-            img_a = cv2.cvtColor(img_a, cv2.COLOR_RGB2GRAY)
+            img_a = cv2.cvtColor(img_a.numpy(), cv2.COLOR_RGB2GRAY)
             kp_a, des_a = self.sift.detectAndCompute(img_a, None)
 
             histo_a = torch.zeros(self.feature_dim, device=self.classifier.device)
@@ -104,7 +104,7 @@ class BoFModel(nn.Module):
                 idx = self.visual_words_a.predict([d])
                 histo_a[idx] += 1/nkp_a
             
-            img_g = cv2.cvtColor(img_g, cv2.COLOR_RGB2GRAY)
+            img_g = cv2.cvtColor(img_g.numpy(), cv2.COLOR_RGB2GRAY)
             kp_g, des_g = self.sift.detectAndCompute(img_g, None)
 
             histo_g = torch.zeros(self.feature_dim, device=self.classifier.device)
