@@ -114,7 +114,7 @@ class BoFModel(nn.Module):
             img_a = img_a.astype(np.uint8)
             kp_a, des_a = self.sift.detectAndCompute(img_a, None)
             # Handle no keypoints
-            if len(kp) < 1:
+            if len(kp_a) < 1:
                 des = np.zeros((1, self.sift.descriptorSize()), np.float32)
 
             histo_a = torch.zeros(self.feature_dim, device=self.classifier.device)
@@ -130,7 +130,7 @@ class BoFModel(nn.Module):
             img_g = img_g.astype(np.uint8)
             kp_g, des_g = self.sift.detectAndCompute(img_g, None)
             # Handle no keypoints
-            if len(kp) < 1:
+            if len(kp_g) < 1:
                 des = np.zeros((1, self.sift.descriptorSize()), np.float32)
 
             histo_g = torch.zeros(self.feature_dim, device=self.classifier.device)
