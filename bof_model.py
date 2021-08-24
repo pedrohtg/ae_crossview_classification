@@ -45,7 +45,7 @@ class BoFModel(nn.Module):
 
         self.classifier = Classifier(2*feature_dim, num_classes)
 
-        self.sift = cv2.xfeatures2d.SIFT_create()
+        self.sift = cv2.SIFT_create()
 
         sift_vectors_a = {}
         descriptor_list_a = []
@@ -93,7 +93,7 @@ class BoFModel(nn.Module):
         for i in range(a.size()[0]):
             img_a = _a[i]
             img_g = _g[i]
-            
+
             img_a = cv2.cvtColor(img_a, cv2.COLOR_RGB2GRAY)
             kp_a, des_a = self.sift.detectAndCompute(img_a, None)
 
