@@ -14,7 +14,7 @@ import statistics
 from tqdm import tqdm
 
 def kmeans(k, descriptor_list):
-    _kmeans = KMeans(n_clusters = k, n_init=10)
+    _kmeans = KMeans(n_clusters = k, n_init=10, max_iter=100)
     _kmeans.fit(descriptor_list)
     return _kmeans
 
