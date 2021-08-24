@@ -36,13 +36,12 @@ class Classifier(nn.Module):
 
 
 class BoFModel(nn.Module):
-    def __init__(self, dataloaders, backbone='vgg', inplanes=3, feature_dim=512, num_classes=11, is_vae=False, is_finetune=False):
+    def __init__(self, dataloaders, inplanes=3, feature_dim=512, num_classes=11):
         super(BoFModel, self).__init__()
 
         self.inplanes = inplanes
         self.feature_dim = feature_dim
         self.num_classes = num_classes
-        self.is_vae = is_vae
 
         self.classifier = Classifier(2*feature_dim, num_classes)
 
@@ -86,34 +85,36 @@ class BoFModel(nn.Module):
 
 
     def forward(self, a, g):
-        a = torch.movedim(a, 1, 3)
-        g = torch.movedim(g, 1, 3)
+        _a = torch.movedim(a, 1, 3)
+        _g = torch.movedim(g, 1, 3)
 
         histo_list = []
 
-        for i in range(a.size):
-            for img_a, img_g in zip(a[i], g[i]):
-                img_a = cv2.cvtColor(img_a, cv2.COLOR_RGB2GRAY)
-                kp_a, des_a = self.sift.detectAndCompute(img_a, None)
+        for i in range(a.size()[0]):
+            img_a = _a[i]
+            img_g = _g[i]
+            
+            img_a = cv2.cvtColor(img_a, cv2.COLOR_RGB2GRAY)
+            kp_a, des_a = self.sift.detectAndCompute(img_a, None)
 
-                histo_a = torch.zeros(self.feature_dim, device=self.classifier.device)
-                nkp_a = len(kp_a)
+            histo_a = torch.zeros(self.feature_dim, device=self.classifier.device)
+            nkp_a = len(kp_a)
 
-                for d in des_a:
-                    idx = self.visual_words_a.predict([d])
-                    histo_a[idx] += 1/nkp_a
-                
-                img_g = cv2.cvtColor(img_g, cv2.COLOR_RGB2GRAY)
-                kp_g, des_g = self.sift.detectAndCompute(img_g, None)
+            for d in des_a:
+                idx = self.visual_words_a.predict([d])
+                histo_a[idx] += 1/nkp_a
+            
+            img_g = cv2.cvtColor(img_g, cv2.COLOR_RGB2GRAY)
+            kp_g, des_g = self.sift.detectAndCompute(img_g, None)
 
-                histo_g = torch.zeros(self.feature_dim, device=self.classifier.device)
-                nkp_g = len(kp_g)
+            histo_g = torch.zeros(self.feature_dim, device=self.classifier.device)
+            nkp_g = len(kp_g)
 
-                for d in des_g:
-                    idx = self.visual_words_g.predict([d])
-                    histo_g[idx] += 1/nkp_g
+            for d in des_g:
+                idx = self.visual_words_g.predict([d])
+                histo_g[idx] += 1/nkp_g
 
-                histo_list.append(torch.cat([histo_a, histo_g]))
+            histo_list.append(torch.cat([histo_a, histo_g]))
         
         histo_list = torch.vstack(histo_list)
 
