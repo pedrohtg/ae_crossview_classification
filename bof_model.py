@@ -65,7 +65,7 @@ class BoFModel(nn.Module):
                 img = inp_a[i]
                 # print('imga', img.size(), img.numpy().shape)
                 img = cv2.cvtColor(img.numpy(), cv2.COLOR_RGB2GRAY)
-                img = (img - img.min)
+                img = (img - img.min())
                 img = (img / img.max())*255
                 img = img.astype(np.uint8)
                 kp, des = self.sift.detectAndCompute(img, None)
@@ -77,7 +77,7 @@ class BoFModel(nn.Module):
             for i in range(inp_g.size()[0]):
                 features = []
                 img = inp_g[i]
-                img = (img - img.min)
+                img = (img - img.min())
                 img = (img / img.max())*255
                 img = img.astype(np.uint8)
                 # print('imgg', img.size(), img.numpy().shape)
@@ -103,7 +103,7 @@ class BoFModel(nn.Module):
             img_g = _g[i]
 
             img_a = cv2.cvtColor(img_a.numpy(), cv2.COLOR_RGB2GRAY)
-            img_a = (img_a - img_a.min)
+            img_a = (img_a - img_a.min())
             img_a = (img_a / img_a.max())*255
             img_a = img_a.astype(np.uint8)
             kp_a, des_a = self.sift.detectAndCompute(img_a, None)
@@ -116,7 +116,7 @@ class BoFModel(nn.Module):
                 histo_a[idx] += 1/nkp_a
             
             img_g = cv2.cvtColor(img_g.numpy(), cv2.COLOR_RGB2GRAY)
-            img_g = (img_g - img_g.min)
+            img_g = (img_g - img_g.min())
             img_g = (img_g / img_g.max())*255
             img_g = img_g.astype(np.uint8)
             kp_g, des_g = self.sift.detectAndCompute(img_g, None)
