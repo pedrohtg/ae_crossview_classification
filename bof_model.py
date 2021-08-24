@@ -105,8 +105,8 @@ class BoFModel(nn.Module):
         histo_list = []
 
         for i in range(a.size()[0]):
-            img_a = _a[i].numpy()
-            img_g = _g[i].numpy()
+            img_a = _a[i].cpu().numpy()
+            img_g = _g[i].cpu().numpy()
 
             img_a = cv2.cvtColor(img_a, cv2.COLOR_RGB2GRAY)
             img_a = (img_a - img_a.min())
