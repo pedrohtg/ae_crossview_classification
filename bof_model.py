@@ -69,7 +69,10 @@ class BoFModel(nn.Module):
                 img = (img / img.max())*255
                 img = img.astype(np.uint8)
                 kp, des = self.sift.detectAndCompute(img, None)
-        
+                # Handle no keypoints
+                if len(kp) < 1:
+                    des = np.zeros((1, self.sift.descriptorSize()), np.float32)
+
                 descriptor_list_a.extend(des)
                 features.append(des)
                 sift_vectors_a[i] = features
@@ -83,6 +86,9 @@ class BoFModel(nn.Module):
                 # print('imgg', img.size(), img.numpy().shape)
                 img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
                 kp, des = self.sift.detectAndCompute(img, None)
+                # Handle no keypoints
+                if len(kp) < 1:
+                    des = np.zeros((1, self.sift.descriptorSize()), np.float32)
         
                 descriptor_list_g.extend(des)
                 features.append(des)
@@ -107,6 +113,9 @@ class BoFModel(nn.Module):
             img_a = (img_a / img_a.max())*255
             img_a = img_a.astype(np.uint8)
             kp_a, des_a = self.sift.detectAndCompute(img_a, None)
+            # Handle no keypoints
+            if len(kp) < 1:
+                des = np.zeros((1, self.sift.descriptorSize()), np.float32)
 
             histo_a = torch.zeros(self.feature_dim, device=self.classifier.device)
             nkp_a = len(kp_a)
@@ -120,6 +129,9 @@ class BoFModel(nn.Module):
             img_g = (img_g / img_g.max())*255
             img_g = img_g.astype(np.uint8)
             kp_g, des_g = self.sift.detectAndCompute(img_g, None)
+            # Handle no keypoints
+            if len(kp) < 1:
+                des = np.zeros((1, self.sift.descriptorSize()), np.float32)
 
             histo_g = torch.zeros(self.feature_dim, device=self.classifier.device)
             nkp_g = len(kp_g)
