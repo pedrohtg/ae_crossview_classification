@@ -62,24 +62,24 @@ class BoFModel(nn.Module):
 
             for i in range(inp_a.size()[0]): 
                 features = []
-                for img in inp_a[i]:
-                    print('imga', img.size(), img.numpy().shape)
-                    img = cv2.cvtColor(img.numpy(), cv2.COLOR_RGB2GRAY)
-                    kp, des = self.sift.detectAndCompute(img, None)
-            
-                    descriptor_list_a.extend(des)
-                    features.append(des)
+                img = inp_a[i]
+                # print('imga', img.size(), img.numpy().shape)
+                img = cv2.cvtColor(img.numpy(), cv2.COLOR_RGB2GRAY)
+                kp, des = self.sift.detectAndCompute(img, None)
+        
+                descriptor_list_a.extend(des)
+                features.append(des)
                 sift_vectors_a[i] = features
 
             for i in range(inp_g.size()[0]):
                 features = []
-                for img in inp_g[i]:
-                    print('imgg', img.size(), img.numpy().shape)
-                    img = cv2.cvtColor(img.numpy(), cv2.COLOR_RGB2GRAY)
-                    kp, des = self.sift.detectAndCompute(img, None)
-            
-                    descriptor_list_g.extend(des)
-                    features.append(des)
+                img = inp_g[i]
+                # print('imgg', img.size(), img.numpy().shape)
+                img = cv2.cvtColor(img.numpy(), cv2.COLOR_RGB2GRAY)
+                kp, des = self.sift.detectAndCompute(img, None)
+        
+                descriptor_list_g.extend(des)
+                features.append(des)
                 sift_vectors_g[i] = features
 
         self.visual_words_a = kmeans(feature_dim, descriptor_list_a) 
