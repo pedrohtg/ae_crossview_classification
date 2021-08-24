@@ -62,9 +62,9 @@ class BoFModel(nn.Module):
 
             for i in range(inp_a.size()[0]): 
                 features = []
-                img = inp_a[i]
+                img = inp_a[i].numpy()
                 # print('imga', img.size(), img.numpy().shape)
-                img = cv2.cvtColor(img.numpy(), cv2.COLOR_RGB2GRAY)
+                img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
                 img = (img - img.min())
                 img = (img / img.max())*255
                 img = img.astype(np.uint8)
@@ -76,12 +76,12 @@ class BoFModel(nn.Module):
 
             for i in range(inp_g.size()[0]):
                 features = []
-                img = inp_g[i]
+                img = inp_g[i].numpy()
                 img = (img - img.min())
                 img = (img / img.max())*255
                 img = img.astype(np.uint8)
                 # print('imgg', img.size(), img.numpy().shape)
-                img = cv2.cvtColor(img.numpy(), cv2.COLOR_RGB2GRAY)
+                img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
                 kp, des = self.sift.detectAndCompute(img, None)
         
                 descriptor_list_g.extend(des)
@@ -99,10 +99,10 @@ class BoFModel(nn.Module):
         histo_list = []
 
         for i in range(a.size()[0]):
-            img_a = _a[i]
-            img_g = _g[i]
+            img_a = _a[i].numpy()
+            img_g = _g[i].numpy()
 
-            img_a = cv2.cvtColor(img_a.numpy(), cv2.COLOR_RGB2GRAY)
+            img_a = cv2.cvtColor(img_a, cv2.COLOR_RGB2GRAY)
             img_a = (img_a - img_a.min())
             img_a = (img_a / img_a.max())*255
             img_a = img_a.astype(np.uint8)
@@ -115,7 +115,7 @@ class BoFModel(nn.Module):
                 idx = self.visual_words_a.predict([d])
                 histo_a[idx] += 1/nkp_a
             
-            img_g = cv2.cvtColor(img_g.numpy(), cv2.COLOR_RGB2GRAY)
+            img_g = cv2.cvtColor(img_g, cv2.COLOR_RGB2GRAY)
             img_g = (img_g - img_g.min())
             img_g = (img_g / img_g.max())*255
             img_g = img_g.astype(np.uint8)
